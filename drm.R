@@ -38,20 +38,22 @@ disease$disease_per_coral <- (disease$`BB/RB`+disease$`BB/RB,DSD`+disease$DC+dis
   disease$STL+disease$UNK+disease$`UNK,DC`+disease$WPL+disease$WPL+disease$YB)/disease$N
 
 barplot(disease$disease_per_coral)
+plot(density(disease$disease_per_coral))
 #Only analyzing CNAT
 #data <- data[data$Species == "CNAT",]
 
 
 width <- data%>%
   group_by(Year) %>%
-  summarize(total_width = sum(Width))
-#width <- rbind(c(2005, 0), width) #add missing 0s
+  summarize(total_width = sum(Width), n=n())
+#width <- rbind(c(2005, 0), width) #add missing 0s for CNAT
 #width <- rbind(c(2022, 0), width) #add missing 0s
 #width <- rbind(c(2016, 0), width) #add missing 0s
 width <- width[order(width$Year),]
 width <- width %>%
-  mutate(avg_width = total_width/total_transects$n_transects)
+  mutate(avg_width = total_width/n)
 barplot(width$avg_width)
+plot(density(width$avg_width))
 d <- data.frame(disease$Year)
 d$disease_per_coral <- disease$disease_per_coral
 d$avg_width <- width$avg_width
